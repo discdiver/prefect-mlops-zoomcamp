@@ -64,7 +64,7 @@ def train_model_search(train, valid, y_val):
             booster = xgb.train(
                 params=params,
                 dtrain=train,
-                num_boost_round=10,  # Jeff modified from 1000
+                num_boost_round=10,  # modified from 1000 to save time
                 evals=[(valid, "validation")],
                 early_stopping_rounds=50,
             )
@@ -115,7 +115,7 @@ def train_best_model(X_train, X_val, y_train, y_val, dv):
         booster = xgb.train(
             params=best_params,
             dtrain=train,
-            num_boost_round=10,  # Jeff modified from 1000
+            num_boost_round=10,  # modified from 1000 to save time
             evals=[(valid, "validation")],
             early_stopping_rounds=50,
         )
@@ -126,7 +126,7 @@ def train_best_model(X_train, X_val, y_train, y_val, dv):
 
         with open(
             "models/preprocessor.b", "wb"
-        ) as f_out:  # must create models directory
+        ) as f_out:  # must create models directory first
             pickle.dump(dv, f_out)
         mlflow.log_artifact("models/preprocessor.b", artifact_path="preprocessor")
 
@@ -146,9 +146,7 @@ def main_flow(
     df_val = read_dataframe(val_path)
 
     # Transform
-    X_train, X_val, y_train, y_val, dv = add_features(
-        df_train, df_val
-    )  # jeff removed .result() - only needed with task runner
+    X_train, X_val, y_train, y_val, dv = add_features(df_train, df_val)
 
     # Training
     train = xgb.DMatrix(X_train, label=y_train)
