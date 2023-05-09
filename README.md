@@ -11,7 +11,7 @@ Clone the repo locally.
 
 ## Install packages
 
-In a conda environment, install all package dependencies with 
+In a conda environment with Python 3.10.12 or similar, install all package dependencies with 
 
 ```bash
 pip install -r requirements.txt

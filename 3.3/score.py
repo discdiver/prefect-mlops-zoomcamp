@@ -140,6 +140,7 @@ def main_flow(
 ):
     mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("nyc-taxi-experiment")
+
     # Load
     df_train = read_dataframe(train_path)
     df_val = read_dataframe(val_path)
@@ -158,14 +159,3 @@ def main_flow(
 
 if __name__ == "__main__":
     main_flow()
-
-# from prefect.deployments import Deployment
-# from prefect.orion.schemas.schedules import IntervalSchedule
-# from datetime import timedelta
-
-# Deployment.build_from_flow(
-#     flow=main_flow,
-#     name="model_training",
-#     # schedule=IntervalSchedule(interval=timedelta(weeks=1)),
-#     work_queue_name="ml",
-# )
