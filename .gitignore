@@ -137,7 +137,7 @@ dmypy.json
 *.csv
 *.json
 
-# mlflow files
-/mlruns
-/models
-mlflow.db
+# MLflow 
+*mlruns*
+*models*
+*mlflow.db*
