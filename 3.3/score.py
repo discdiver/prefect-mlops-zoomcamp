@@ -151,7 +151,7 @@ def main_flow(
     train = xgb.DMatrix(X_train, label=y_train)
     valid = xgb.DMatrix(X_val, label=y_val)
     best = train_model_search(train, valid, y_val)
-    train_best_model(X_train, X_val, y_train, y_val, dv, wait_for=best)
+    train_best_model(X_train, X_val, y_train, y_val, dv)
 
 
 if __name__ == "__main__":
