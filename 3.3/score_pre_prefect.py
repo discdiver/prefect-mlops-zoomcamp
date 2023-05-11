@@ -11,10 +11,7 @@ import xgboost as xgb
 from hyperopt import fmin, tpe, hp, STATUS_OK, Trials
 from hyperopt.pyll import scope
 
-from prefect import flow, task
 
-
-@task
 def read_dataframe(filename):
     df = pd.read_parquet(filename)
 
@@ -32,7 +29,6 @@ def read_dataframe(filename):
     return df
 
 
-@task
 def add_features(df_train, df_val):
     df_train["PU_DO"] = df_train["PULocationID"] + "_" + df_train["DOLocationID"]
     df_val["PU_DO"] = df_val["PULocationID"] + "_" + df_val["DOLocationID"]
@@ -54,7 +50,6 @@ def add_features(df_train, df_val):
     return X_train, X_val, y_train, y_val, dv
 
 
-@task
 def train_model_search(train, valid, y_val):
     def _objective(params):
         with mlflow.start_run():
@@ -93,7 +88,6 @@ def train_model_search(train, valid, y_val):
     return best_result
 
 
-@task
 def train_best_model(X_train, X_val, y_train, y_val, dv):
     with mlflow.start_run():
         train = xgb.DMatrix(X_train, label=y_train)
@@ -132,7 +126,6 @@ def train_best_model(X_train, X_val, y_train, y_val, dv):
         mlflow.xgboost.log_model(booster, artifact_path="models_mlflow")
 
 
-@flow
 def main_flow(
     train_path: str = "./data/green_tripdata_2021-01.parquet",
     val_path: str = "./data/green_tripdata_2021-02.parquet",
@@ -151,7 +144,7 @@ def main_flow(
     train = xgb.DMatrix(X_train, label=y_train)
     valid = xgb.DMatrix(X_val, label=y_val)
     best = train_model_search(train, valid, y_val)
-    train_best_model(X_train, X_val, y_train, y_val, dv, wait_for=best)
+    train_best_model(X_train, X_val, y_train, y_val, dv)
 
 
 if __name__ == "__main__":
