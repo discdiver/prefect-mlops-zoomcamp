@@ -1,5 +1,8 @@
 # MLOps Zoomcamp 2023 Week 3
-## Prefect
+
+![Prefect logo](./images/logo.svg)
+
+---
 
 This repo contains Python code to accompany the videos that show how to use Prefect for MLOps. We will create workflows that you can orchestrate and observe..
 
