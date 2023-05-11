@@ -11,9 +11,10 @@ import xgboost as xgb
 from prefect import flow, task
 
 
-@task
+@task(retries=True, retry_delay_seconds=3)
 def read_data(filename: str) -> pd.DataFrame:
     """Read data into DataFrame"""
+
     df = pd.read_parquet(filename)
 
     df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
@@ -43,6 +44,7 @@ def add_features(
     ]
 ):
     """Add features to the model"""
+
     df_train["PU_DO"] = df_train["PULocationID"] + "_" + df_train["DOLocationID"]
     df_val["PU_DO"] = df_val["PULocationID"] + "_" + df_val["DOLocationID"]
 
@@ -59,10 +61,11 @@ def add_features(
 
     y_train = df_train["duration"].values
     y_val = df_val["duration"].values
+
     return X_train, X_val, y_train, y_val, dv
 
 
-@task
+@task(log_prints=True)
 def train_best_model(
     X_train: scipy.sparse._csr.csr_matrix,
     X_val: scipy.sparse._csr.csr_matrix,
@@ -106,6 +109,7 @@ def train_best_model(
         mlflow.log_artifact("models/preprocessor.b", artifact_path="preprocessor")
 
         mlflow.xgboost.log_model(booster, artifact_path="models_mlflow")
+    return None
 
 
 @flow
@@ -128,6 +132,7 @@ def main_flow(
 
     # Train
     train_best_model(X_train, X_val, y_train, y_val, dv)
+    return None
 
 
 if __name__ == "__main__":
