@@ -133,7 +133,8 @@ dmypy.json
 *-deployment.yaml
 
 # Big files
-*.parquet
+# *.parquet - if not retrieving file from remote storage 
+# (e.g. S3 or URL), need to have in GH Repo
 *.csv
 *.json
 
