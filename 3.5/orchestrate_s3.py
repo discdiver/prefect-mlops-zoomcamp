@@ -106,6 +106,22 @@ def train_best_model(
         mlflow.log_artifact("models/preprocessor.b", artifact_path="preprocessor")
 
         mlflow.xgboost.log_model(booster, artifact_path="models_mlflow")
+
+        from prefect.artifacts import create_markdown_artifact
+
+        from datetime import date
+
+        markdown__rmse_report = f"""# RMSE Report
+
+        ## Summary
+
+        Duration Prediction 
+
+        ## RMSE XGBoost Model
+
+        | Region        | RMSE |
+        |:--------------|-------:|
+        | {date.today()} | ${rmse,} |
     return None
 
 
