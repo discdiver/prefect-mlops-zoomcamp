@@ -125,7 +125,7 @@ def train_best_model(
         """
 
         create_markdown_artifact(
-            key="Duration model report", markdown=markdown__rmse_report
+            key="duration-model-report", markdown=markdown__rmse_report
         )
     return None
 
